@@ -14,6 +14,7 @@ public class BuyItemAction extends ActionSupport implements SessionAware {
 	 */
 	private int count;
 
+	
 	/**
 	 * 支払い方法
 	 */
