@@ -1,127 +1,92 @@
-drop database if exists store;
-create database store;
-use store;
+drop database if exists shop;
+create database shop character set utf8;
+use shop;
 
-create table categories(
-category_id int primary key not null,
-category varchar(255)
-);
+create table user_info(
+id int primary key not null auto_increment comment "ID",
+user_id varchar(128) unique key not null comment "ユーザーID",
+password varchar(16) not null comment "パスワード",
+family_name varchar(32) not null comment "姓"
+first_name varchar(32) not null comment"名",
+sex tinyint not null default 0 comment "性別",
+email varchar(32) not null comment "メールアドレス",
+status tinyint not null default 1 comment "ステータス",
+logined tinyint not null default 0 comment "ログインフラグ",
+insert_date datetime not null comment "登録日",
+update_date datetime comment "更新日"
+) comment "会員情報テーブル";
 
-insert into categories values
-(1,"OUTERS"),
-(2,"TOPS"),
-(3,"BOTTOMS"),
-(4,"DRESSES"),
-(5,"SHOES"),
-(6,"ACCESSORIES"),
-(7,"GOODS");
+insert into shop.user_info(user_id,password,family_name,first_name,sex,email,insertdate)
+values("m","m","小林","陽","1","soleil.04k@gmail.com",now());
 
-create table items(
-category_id int,
-item_id int primary key auto_increment,
-item_img varchar(255),
-item_name varchar(255),
-item_price varchar(255)
-);
+create table master_category(
+id int primary key not null auto_increment comment "ID",
+category_id int unique key not null comment "カテゴリID",
+category_name varchar(20) unique key not null comment "カテゴリ名",
+insert_date datetime not null comment "登録日",
+update_date datetime comment "更新日"
+) comment "カテゴリマスタテーブル";
 
-insert into items values
-(1,1,"./image/img_outer.jpg","ショートエコファーコート","\24,840"),
-(1,2,"./image/img_outer2.jpg","レディウエストマークコート","\25,920"),
-(1,3,"./image/img_outer4.jpg","ウエストマークウールロングコート","\37,800"),
-(1,4,"./image/img_outer6.jpg","チベットラムファーライクコート","\24.840"),
-(1,5,"./image/img_outer8.jpg","エコファーカラーコート","\31,320"),
-(1,6,"./image/img_outer10.jpg","ポイントエコファーウエストマークコート","\34,560"),
+insert into master_category values
+(1,2,"OUTERS",cast('2018-01-08' as date),cast('2018-01-08' as date)),
+(2,3,"TOPS",cast('2018-01-08' as date),cast('2018-01-08' as date)),
+(3,4,"BOTTOMS",cast('2018-01-08' as date),cast('2018-01-08' as date)),
+(4,5,"DRESSES",cast('2018-01-08' as date),cast('2018-01-08' as date)),
+(5,6,"SHOES",cast('2018-01-08' as date),cast('2018-01-08' as date)),
+(6,7,"ACCESSORIES",cast('2018-01-08' as date),cast('2018-01-08' as date)),
+(7,8,"GOODS",cast('2018-01-08' as date),cast('2018-01-08' as date));
 
-(2,7,"./image/img_tops.jpg","ドットチュールフェザーニットプルオーバー","\8,964"),
-(2,8,"./image/img_tops2.jpg","オフショルラクーンニットプルオーバー","\10,260"),
-(2,9,"./image/img_tops4.jpg","ファーライクショートニットプルオーバー","\10,960"),
-(2,10,"./image/img_tops6.jpg","ポイントフェザーキャミ&カーデSET","\12,960"),
-(2,11,"./image/img_tops8.jpg","レイヤードギャザートップス","\11,840"),
-(2,12,"./image/img_tops10.jpg","パフスリーブレースブラウス","\13,500"),
+create table product_info(
+id int primary key not null auto_increment comment "ID",
+product_id int unique key not null comment "商品ID",
+product_name varchar(100) unique key not null comment "商品名",
+product_description varchar(255) not null comment "商品詳細",
+category_id int not null comment "カテゴリID",
+price int comment "価格",
+stock int comment "在庫",
+image_file_path varchar(100) comment "画像ファイルパス",
+image_file_path varchar(50) comment "画像ファイル名",
+release_date datetime not null comment "発売年月",
+release_company varchar(50) comment "発売会社",
+status tinyint not null default 1 comment "ステータス",
+insert_date datetime not null comment "登録日",
+update_date datetime comment "更新日",
+foreign key(category_id) references master_category(category_id) on update cascade
+) comment "商品情報テーブル";
 
-(3,13,"./image/img_btms.jpg","レースインナーショートパンツ","\5,832"),
-(3,14,"./image/img_btms2.jpg","レギンスインナースカートライクパンツ","\12,960"),
-(3,15,"./image/img_btms4.jpg","バリエーションパンツ","\11,340"),
-(3,16,"./image/img_btms6.jpg","エコファースクエアスカート","\9,936"),
-(3,17,"./image/img_btms8.jpg","デコラティブエンブロイダリースカート","\13,500"),
-(3,18,"./image/img_btms10.jpg","ラメニットプリーツスカート","\9,936"),
+insert into product_info (id, product_id, product_name, product_description, category_id, price, stock, image_file_path, image_file_name, release_date, release_company, status, insert_date, update_date) values
+(1,1,"ショートファーコート","モコモコと毛足の長いエコファー素材が、暖かな表情をつむぐショートコート。襟と手元のリブを取り外して、シックに装うこともできるアイテムです。
+フックタイプの合わせなので、フロントを開けた着こなしもサマになりそう。",2,"24840",10,"./image/","img_outer.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(4,19,"./image/img_drs.jpg","ケーブルニットワンピース","\14,040"),
-(4,20,"./image/img_drs2.jpg","プリーツデザインロングワンピース","\15,120"),
-(4,21,"./image/img_drs4.jpg","レースIラインワンピース","\19.440"),
-(4,22,"./image/img_drs6.jpg","ワンショルダールーズニットワンピース","\15,120"),
-(4,23,"./image/img_drs8.jpg","ラメルーズタートルニットワンピース","\13,150"),
-(4,24,"./image/img_drs10.jpg","オープンショルダータートルニットワンピース","\16,200"),
+(2,2,"モッズコート","毛足の長い素材を内側に配した、旬のムートン素材のモッズコート。ウエストボタンをはずすとストレートのシルエットになり、合わせアイテムを選ばず幅広く着回せます。
+大きく開いたカラーやウエストをマークするリボンで、女性らしい着こなしを叶えます。",2,"25920",10,"./image/","img_outer2.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(5,25,"./image/img_sh.jpg","2WAYスレンダーサンダル","\11,180"),
-(5,26,"./image/img_sh2.jpg","ギャザーデザインシューズ","\14,040"),
-(5,27,"./image/img_sh4.jpg","センタージップショートブーツ","\16,200"),
+(3,3,"ウールロングコート","メンズコートのデザインを落とし込み、サイズ感もややオーバーサイズに作ることでウエストマークが際立ちメリハリがつきスタイルアップ効果も。
+前合わせを逆にしメンズ仕様にしジェンダーレスな雰囲気が楽しめる一枚に仕上げました。",2,"37800",10,"./image/","img_outer4.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(6,28,"./image/img_ac1.jpg","スエードキャップ","\4,536"),
-(6,29,"./image/img_ac2.jpg","エコファーピアス","\2,700"),
-(6,30,"./image/img_ac3.jpg","ビジューモチーフWネックレス","\3,456"),
+(4,4,"ファーライクコート","羽織るだけで、コーディネートの格を上げてくれるファーライクコート。パーティーシーンなどの華やぎコーデにはもちろん、デニムやカジュアルなワイドパンツに
+合わせてカジュアルダウンさせれば、こなれ感のある着こなしに。",2,"24840",10,"./image/","img_outer6.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(7,31,"./image/img_gd.jpg","コルセットリボンベルト","\8,964"),
-(7,32,"./image/img_gd1.jpg","エコファーマフラー","\12,420"),
-(7,33,"./image/img_gd2.jpg","フェイクレザー太ベルト","\4,860");
+(5,5,"ファーカラーコート","毎年人気のAラインコートが、今年はさらにドラマティックな表情で登場。ウエスト部分から切り替えを入れて、ふんわりフレア感を楽しめるこだわりの一枚です。
+洗練されたWボタンとクラシカルなカラーのミックス感のおかげで、甘過ぎることなくレディな雰囲気に。",2,"31320",10,"./image/","img_outer8.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-create table item_description(
-item_id int,
-text varchar(255)
-);
+(6,6,"ファーマークコート","ビッグカラーと、ロング丈ならではのフレア感が余裕感たっぷり。ポケット部分にあしらわれたエコファーが目を惹くリッチな仕上がりです。フロントを開ければカジュアルに、
+ベルトでウエストマークすれば女性らしいシルエットが楽しめたりと、様々な表情を演出してくれる万能コートです。",2,"34560",10,"./image/","img_outer10.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-insert into item_description(item_id,text) values
-(1,"モコモコと毛足の長いエコファー素材が、暖かな表情をつむぐショートコート。
-襟と手元のリブを取り外して、シックに装うこともできるアイテムです。
-フックタイプの合わせなので、フロントを開けた着こなしもサマになりそう。"),
+(7,7,"フェザーニットプルオーバー","チュールとドッキングしたロマンティックなニット。デコルテ部分にドットチュールを施し、上品な肌見せを演出しました。ボリューミーなスカートに合わせて
+お呼ばれシーンに、シックなワイドパンツに合わせればハンサムな印象にもなれる着まわし自在なアイテムです。",3,"8964",10,"./image/","img_tops.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(2,"毛足の長い素材を内側に配した、旬のムートン素材のモッズコート。
-ウエストボタンをはずすとストレートのシルエットになり、合わせアイテムを選ばず幅広く着回せます。
-大きく開いたカラーやウエストをマークするリボンで、女性らしい着こなしを叶えます。
-ワイドに折り返したスリーブ部分も、愛らしいポイントに。"),
+(8,8,"オフショルニットプルオーバー","デコルテから腕にかけてのラインを美しく、すっきり見せてくれるオフショルダーニット。ふわふわで軽やかな上質の素材感や、幅広のオフショルダーで艶感たっぷり。
+ブラウジングが決まりやすい、程よくフィットした腰回りのデザインは、スカートやデニム、ワイドパンツとも好相性です。",3,"10260",10,"./image/","img_tops2.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(3,"メンズコートのデザインを落とし込み、サイズ感もややオーバーサイズに作ることでウエストマークが際立ちメリハリがつきスタイルアップ効果も。
-前合わせを逆にしメンズ仕様にしジェンダーレスな雰囲気が楽しめる一枚に仕上げました。
-同素材のウエストベルトは、トレンドの長めデザイン。"),
+(9,9,"ファーショートニットプルオーバー","見た目にも暖かな印象のファーライク素材のニット。ハイネックやウエスト、袖口はリブ仕様ですっきり仕様に。もたつくことなくモードな着こなしを叶えます。
+コンパクトなシルエットはどんなボトムスと合わせやすく、このニットでこなれた雰囲気が得られるおしゃれ心を満たしてくれる一枚です。",3,"10960",10,"./image/","img_tops4.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(4,"2017 Autumn&Winter 2nd Collection羽織るだけで、コーディネートの格を上げてくれるファーライクコート。
-独特の素材感を活かしたボリューミーなシルエット、ノーカラーやフロントのファスナーのおかげで、すっきりと着こなすことができます。
-パーティーシーンなどの華やぎコーデにはもちろん、デニムやカジュアルなワイドパンツに合わせてカジュアルダウンさせれば、こなれ感のある着こなしに。"),
+(10,10,"フェザーキャミ&カーデSET","ふんわりコンパクトなカーディガンの上に、同素材のキャミソールを合わせた特別感のあるセット。キャミソールの肩部分にあしらったフェザーは
+目を惹く華やかなデザイン。おしゃれするって楽しい、そんな気持ちを改めて思い出させてくれるフェミニンな一着。",3,"12960",10,"./image/","img_tops6.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(5,"2017 Autumn&Winter 2nd Collection毎年人気のAラインコートが、今年はさらにドラマティックな表情で登場。
-ウエスト部分から切り替えを入れて、ふんわりフレア感を楽しめるこだわりの一枚です。
-洗練されたWボタンとクラシカルなカラーのミックス感のおかげで、甘過ぎることなくレディな雰囲気に。
-取り外しが可能の襟元のファーは、気分やシーンによって使い分けられるうれしい仕様。"),
-
-(6,"2017 Autumn&Winter 2nd Collectionこれからの冬に向けて華やかに盛り上げてくれる、主役級コートが登場。
-ビッグカラーと、ロング丈ならではのフレア感が余裕感たっぷり。ポケット部分にあしらわれたエコファーが目を惹くリッチな仕上がりです。
-フロントを開ければカジュアルに、ベルトでウエストマークすれば女性らしいシルエットが楽しめたりと、様々な表情を演出してくれる万能コートです。
-シックなシルエットはお呼ばれシーンにもぴったり。"),
-
-(7,"2017 Autumn&Winter 2nd Collectionチュールとドッキングしたロマンティックなニット。デコルテ部分にドットチュールを施し、
-上品な肌見せを演出しました。ややパフスリーブな肩デザインに女の子らしさが漂います。
-コンパクトなシルエットは、ボリューミーなスカートに合わせてお呼ばれシーンに、シックなワイドパンツに合わせればハンサムな印象にもなれる,
-着まわし自在なアイテムです。ホリデーシーズンにも華やぐニットは、今年是非持っていたい一枚。"),
-
-(8,"2017 Autumn&Winter 2nd Collectionデコルテから腕にかけてのラインを美しく、すっきり見せてくれるオフショルダーニット。
-ふわふわで軽やかな上質の素材感や、幅広のオフショルダーで艶感たっぷり。いつもの着こなしを上品にランクアップしてくれます。
-ブラウジングが決まりやすい、程よくフィットした腰回りのデザインは、スカートやデニム、ワイドパンツとも好相性です。"),
-
-(9,"2017 Autumn&Winter 2nd Collection見た目にも暖かな印象のファーライク素材のニット。
-ハイネックやウエスト、袖口はリブ仕様ですっきり仕様に。
-もたつくことなくモードな着こなしを叶えます。コンパクトなシルエットはどんなボトムスと合わせやすく、
-バランスが取りやすいからワードローブの中から何度も手に取りたくなること必須。このニットでこなれた雰囲気が得られる、
-おしゃれ心を満たしてくれる一枚です。"),
-
-(10,"2017 Autumn&Winter 2nd Collectionふんわりコンパクトなカーディガンの上に、
-同素材のキャミソールを合わせた特別感のあるセット。キャミソールの肩部分にあしらったフェザーは、目を惹く華やかなデザイン。
-おしゃれするって楽しい、そんな気持ちを改めて思い出させてくれるフェミニンな一着。ピンクで思いっきり甘く、
-スモーキーブルーやブラックで、大人の可愛らしさを演出するのもオススメ。"),
-
-(11,"2017 Autumn&Winter 2nd Collection透け感のあるロマンティックなギャザーブラウスにビスチェがドッキングしたトップスセット。
-フロントと袖にギャザーがたっぷり入ったシースルーのトップスは、コーディネートに華やかさと軽さをプラスしてくれます。
-ウエストラインを美しく魅せてくれるビスチェはブラウスオンや、インにしたりと、２wayの着こなしも◎。
-気分やシーンで様々な印象になれる着まわし力抜群なセットです。"),
+(11,11,"レイヤードギャザートップス","透け感のあるロマンティックなギャザーブラウスにビスチェがドッキングしたトップスセット。ウエストラインを美しく魅せてくれるビスチェは
+ブラウスオンや、インにしたりと、２wayの着こなしも◎。気分やシーンで様々な印象になれる着まわし力抜群なセットです。",3,"11840",10"./image/","img_tops8.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
 (12,"2017 Autumn&Winter 2nd Collection
 こだわりのあるレースのおかげで、雰囲気のある着こなしが得られるブラウスは、ボレロのようにさらりと羽織ったり、ボタンを閉めてインナーとのレイヤードを楽しんだりと、コーディネートの幅が広がります。
@@ -244,3 +209,105 @@ PNKは光沢感のある総フリンジ、BLKは煌めくスパンコールの�
 やや太めのつくりになっていて、確かな存在を放つベルト。
 剣先が垂れる長さで、いつものワンピースやパンツスタイルに一気にトレンド感がでます。
 柔らかく付けやすい、フェイクレザーを採用。");
+
+create table cart_info(
+id int primary key not null auto_increment comment "ID",
+user_id varchar(128) comment "ユーザーID",
+sample_user_id varchar(128) comment "仮ユーザーID",
+product_id int not null comment "商品ID",
+count int not null comment "購入個数",
+insert_date datetime not null comment "登録日",
+update_date datetimme comment "更新日",
+foreign key(user_id) references user_info(user_id) on update cascade,
+foreign key(product_id) references product_info(product_id) on update cascade
+)comment "カート情報テーブル";
+
+create table destination_info(
+id int primary key not null auto_increment comment "ID",
+user_id varchar(16) not null comment "ユーザーID",
+family_name varchar(16) not null comment "姓",
+first_name varchar(16) not null comment "名",
+email varchar(32) not null comment "メールアドレス",
+tel_number varchar(13) not null comment "電話番号",
+user_address varchar(50) not null comment "住所",
+insert_date datetime not null comment "登録日",
+update_date datetime not null comment "更新日",
+foreign key(user_id) references user_info(user_id) on update cascade on delete cascade
+) comment "宛先情報テーブル";
+
+create table purchase_history_info(
+id int primary key not null auto_increment comment "ID",
+product_id varchar(16) not null comment "ユーザーID",
+product_id int not null comment "商品ID",
+count int not null comment "購入個数",
+insert_date datetime not null comment "登録日",
+update_date datetime comment "更新日",
+foreign key(user_id) references user_id(user_id) on update cascade on delete cascade,
+foreign key(product_id) references product_info(product_id) on update cascade
+) comment "購入履歴情報テーブル";
+
+
+
+
+
+create table categories(
+category_id int primary key not null,
+category varchar(255)
+);
+
+
+
+create table items(
+category_id int,
+item_id int primary key auto_increment,
+item_img varchar(255),
+item_name varchar(255),
+item_price varchar(255)
+);
+
+insert into items values
+
+
+
+
+
+
+
+
+
+
+
+
+(2,12,"./image/img_tops10.jpg","パフスリーブレースブラウス","\13,500"),
+
+(3,13,"./image/img_btms.jpg","レースインナーショートパンツ","\5,832"),
+(3,14,"./image/img_btms2.jpg","レギンスインナースカートライクパンツ","\12,960"),
+(3,15,"./image/img_btms4.jpg","バリエーションパンツ","\11,340"),
+(3,16,"./image/img_btms6.jpg","エコファースクエアスカート","\9,936"),
+(3,17,"./image/img_btms8.jpg","デコラティブエンブロイダリースカート","\13,500"),
+(3,18,"./image/img_btms10.jpg","ラメニットプリーツスカート","\9,936"),
+
+(4,19,"./image/img_drs.jpg","ケーブルニットワンピース","\14,040"),
+(4,20,"./image/img_drs2.jpg","プリーツデザインロングワンピース","\15,120"),
+(4,21,"./image/img_drs4.jpg","レースIラインワンピース","\19.440"),
+(4,22,"./image/img_drs6.jpg","ワンショルダールーズニットワンピース","\15,120"),
+(4,23,"./image/img_drs8.jpg","ラメルーズタートルニットワンピース","\13,150"),
+(4,24,"./image/img_drs10.jpg","オープンショルダータートルニットワンピース","\16,200"),
+
+(5,25,"./image/img_sh.jpg","2WAYスレンダーサンダル","\11,180"),
+(5,26,"./image/img_sh2.jpg","ギャザーデザインシューズ","\14,040"),
+(5,27,"./image/img_sh4.jpg","センタージップショートブーツ","\16,200"),
+
+(6,28,"./image/img_ac1.jpg","スエードキャップ","\4,536"),
+(6,29,"./image/img_ac2.jpg","エコファーピアス","\2,700"),
+(6,30,"./image/img_ac3.jpg","ビジューモチーフWネックレス","\3,456"),
+
+(7,31,"./image/img_gd.jpg","コルセットリボンベルト","\8,964"),
+(7,32,"./image/img_gd1.jpg","エコファーマフラー","\12,420"),
+(7,33,"./image/img_gd2.jpg","フェイクレザー太ベルト","\4,860");
+
+create table item_description(
+item_id int,
+text varchar(255)
+);
+
