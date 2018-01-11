@@ -16,7 +16,7 @@ insert_date datetime not null comment "登録日",
 update_date datetime comment "更新日"
 ) comment "会員情報テーブル";
 
-insert into user_info(user_id,password,family_name,first_name,sex,email,insertdate)
+insert into user_info(user_id,password,family_name,first_name,sex,email,insert_date)
 values("m","m","小林","陽","1","soleil.04k@gmail.com",now());
 
 create table master_category(
@@ -100,7 +100,7 @@ insert into product_info (id, product_id, product_name, product_description, cat
 (15,15,"バリエーションパンツ","PNKは光沢感のある総フリンジ、BLKは煌めくスパンコールの素材。どちらもやわらかく、薄手の着やすいもので作ったオシャレなバリエーションパンツ。
 ウエストは異素材のパイピングでシンプルにしました。シャツやニットなど、カジュアルなアイテムとのコーディネイトがおすすめです。",4,"11340",10,"./image/","img_btms4.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(16,16,,"エコファースクエアスカート","全面にふんわりとエコファーを施した暖かみ溢れる、トレンド感のあるミニ丈のスカート。コンパクトなデザインは、どんなトップスとも合わせやすく、
+(16,16,"エコファースクエアスカート","全面にふんわりとエコファーを施した暖かみ溢れる、トレンド感のあるミニ丈のスカート。コンパクトなデザインは、どんなトップスとも合わせやすく、
 Aラインならではの動きやすさ。目を惹く素材感は、いつものコーディネートに鮮度をもたらしてくれます。",4,"9936",10,"./image/","img_btms6.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
 (17,17,"デコラティブエンブロイダリースカート","ビジューやビーズをあしらった、リュクスな仕上がりのデコラティブエンブロイダリースカート。刺繍はオリジナルになります。
@@ -142,14 +142,14 @@ Aラインならではの動きやすさ。目を惹く素材感は、いつも�
 (29,29,"エコファーピアス","今季トレンドのファーピアス。ふわふわしたエコファーは存在感を与え、フェイスラインを華やかに演出します。
 普段使いはもちろん、特別な日のドレスアップスタイルのプラスワンアイテムとしてもおすすめです。",7,"2700",10,"./image/","img_ac2.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(30,30,,"ビジューモチーフWネックレス","華奢なチェーンを2本重ねた、デコルテラインを華やかに彩るネックレス。
+(30,30,"ビジューモチーフWネックレス","華奢なチェーンを2本重ねた、デコルテラインを華やかに彩るネックレス。
 2本を重ねたり、1本ずつ付けたりと3WAYで楽しめるネックレスは、胸元が開いたトップスやワンピースにと、活躍の幅が広がる一品。",7,"3456",10,"./image/","img_ac3.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
-(31,31,,"コルセットリボンベルト","引き続き人気のコルセットベルトが、秋冬仕様の素材でお目見え。暖かみのあるグレーチェックは、
+(31,31,"コルセットリボンベルト","引き続き人気のコルセットベルトが、秋冬仕様の素材でお目見え。暖かみのあるグレーチェックは、
 シックな色味のボトムと合わせればとたんにトレンド感が生まれ、これからの季節のおしゃれをより高めてくれます。",8,"8964",10,"./image/","img_gd.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
 (32,32,"エコファーマフラー","ふわふわの優しい肌さわりのエコファーマフラー。お顔周りを華やかにしてくれるエコファーは軽さも備えているので、
-長時間着用していても疲れにくいのも魅力。お揃いのエコファーミトンとコーディネートすれば、グッとトレンド感がアップします。",8,"12,420",10,"./image/","img_gd1.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
+長時間着用していても疲れにくいのも魅力。お揃いのエコファーミトンとコーディネートすれば、グッとトレンド感がアップします。",8,"12420",10,"./image/","img_gd1.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date)),
 
 (33,33,"フェイクレザー太ベルト","やや太めのつくりになっていて、確かな存在を放つベルト。剣先が垂れる長さで、いつものワンピースやパンツスタイルに
 一気にトレンド感がでます。柔らかく付けやすい、フェイクレザーを採用。",8,"4860",10,"./image/","img_gd2.jpg",cast('2018-01-08' as date),"abcshop",1,NOW(),cast('2018-01-08' as date));
@@ -177,21 +177,20 @@ email varchar(32) not null comment "メールアドレス",
 tel_number varchar(13) not null comment "電話番号",
 user_address varchar(50) not null comment "住所",
 insert_date datetime not null comment "登録日",
-update_date datetime not null comment "更新日",
 foreign key(user_id) references user_info(user_id) on update cascade on delete cascade
 ) comment "宛先情報テーブル";
 
 insert into destination_info(user_id, family_name, first_name, email, tel_number, user_address, insert_date)
-values("m", "小林", "陽", "soleil.04k@gmail.com", "090-0000-0000", "神奈川県横浜市", NOW()),
+values("m", "小林", "陽", "soleil.04k@gmail.com", "090-0000-0000", "神奈川県横浜市", NOW());
 
 create table purchase_history_info(
 id int primary key not null auto_increment comment "ID",
-product_id varchar(16) not null comment "ユーザーID",
+user_id varchar(16) not null comment "ユーザーID",
 product_id int not null comment "商品ID",
 count int not null comment "購入個数",
 insert_date datetime not null comment "登録日",
 update_date datetime comment "更新日",
-foreign key(user_id) references user_id(user_id) on update cascade on delete cascade,
+foreign key(user_id) references user_info(user_id) on update cascade on delete cascade,
 foreign key(product_id) references product_info(product_id) on update cascade
 ) comment "購入履歴情報テーブル";
 
