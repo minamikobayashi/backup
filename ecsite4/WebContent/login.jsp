@@ -5,105 +5,127 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="Content-Script-Type" content="text/javascript" />
-	<meta http-equiv="imagetoolbar" content="no" />
-	<meta name="description" content="" />
-	<meta name="keywords" content="" />
-	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="./css/login.css">
-	<title>Login</title>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<link rel="stylesheet"
+	href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="./css/login.css">
+<title>Login</title>
 </head>
 <body>
 
-	<%-- top --%>
-
-	<div id="top">
-		<img src="./image/img.png"> <a
-			href="https://www.instagram.com/?hl=ja"> <span
-			style="font-size: 220%; opacity: 0.5; color: #e29399;"><i
-				class="fa fa-instagram"></i></span></a> <a href="https://twitter.com/?lang=ja">
-			<span style="font-size: 220%; opacity: 0.5; color: #e29399;"><i
-				class="fa fa-twitter"></i></span>
-		</a> <a href="https://ja-jp.facebook.com"> <span
-			style="font-size: 220%; opacity: 0.5; color: #e29399;"><i
-				class="fa fa-facebook-square"></i></span></a>
-
-	</div>
-
-	<%-- menu --%>
 
 	<div id="header">
+		<div class="icon">
+			<img src="./image/img.png">
+		</div>
 
-		<div id="menu">
+		<div class="title">FASSION SHOP</div>
+
+		<div class="menu">
 			<ul>
-				<li><a href="#">HOME</a></li>
-				<li><a href="#">NEWS</a></li>
-				<li><a href="#">SNAP</a></li>
-				<li><a href="#">STORE</a></li>
-				<li><a href="#">ONLINESHOP</a></li>
+				<li><a href="GoHomeAction">TOP</a></li>
+				<li><a href="GoNewsAction">NEWS</a></li>
+				<s:if test="!#session.loginFlg">
+					<li><a href="GoLoginAction">LOGIN</a></li>
+				</s:if>
+				<s:else>
+					<li><a href="LogoutAction">LOGOUT</a>
+				</s:else>
+
+				<li><a href="GoCartAction">CART</a>
+				<li><a href="ProductInfoAction">STORE</a></li>
+				<s:if test="#session.loginFlg">
+					<li><a href="MyPageAction">MYPAGE</a></li>
+				</s:if>
+				<s:else>
+				</s:else>
+
 			</ul>
 		</div>
 
 	</div>
-
-
-	<%-- main --%>
-
 	<div id="main">
-	<br>
-
-	<%-- main - pageback --%>
-	<div  class="pageback">
-	<a href="/" class="">TOP</a>
-	&nbsp;>&nbsp;
-	<a>LOGIN</a>
-    </div>
-
-    <%-- main - login --%>
-	<h1 class="title">ログイン</h1><br>
 
 
-    <%-- main - login - menber --%>
-	<br><div class="member">
-	<h2>ONLINE SHOPにログイン</h2>
-	<div class="member_form">
-	<s:form action="">
-	<div class="member_form_title">メールアドレス<br></div>
-	<div class="member_textbox">
-	<input class="" type="text" name="mailaddres" placeholder="例:online123@store.com"
-	autocomplete="off" maxlength="256"><br></div>
+		<div class="pageback">
+			<a href='<s:url action="GoHomeAction"/>'>TOP</a> &nbsp;>&nbsp; <a>ログイン</a>
+		</div>
+		<h2 class="title">ログイン</h2>
+		<br> <br>
+		<div class="login_box">
+			<div class="member">
 
-	<br><div class="member_form_title">パスワード<br></div>
-	<div class="member_textbox">
-	<input class="" type="password" name="password" autocomplete="off" maxlength="50"
-	onkeydown="if(event.keycode=13){dologin();}"></div>
+				<h3>登録済みのお客様</h3>
 
-	<h5>※半角、全角、スペースも認識されますのでご注意ください。</h5>
+				<h5>
+					<s:iterator value="errorMessageList">
+						<s:div>
+							<s:property />
+						</s:div>
+					</s:iterator>
+				</h5>
 
-	<div class="member_btn"><button type="submit" class="" >ログイン</button></div>
-	</s:form></div></div>
+				<div class="member_form">
+					<s:form action="LoginAction" theme="simple" id="LoginForm">
+
+						<div class="member_form_title">
+							ユーザーID<br>
+						</div>
+						<div class="member_textbox">
+							<s:textfield type="text" name="userId" value="%{#session.saveId}"
+								class="validate[required,minSize[1],maxSize[16],custom[onlyLetterNumber]]" />
+							<br>
+						</div>
+
+						<br>
+						<div class="member_form_title">
+							パスワード<br>
+						</div>
+						<div class="member_textbox">
+							<s:password name="password"
+								class="validate[required,minSize[1],maxSize[16],custom[onlyLetterNumber]]" />
+						</div>
+
+					※半角英数字のみで入力してください。<br>
+					パスワードをお忘れの方は<a href="passwordResetting.jsp">こちら</a>
+
+
+						<p>
+							<s:checkbox name="saveLogin" />
+							ID保存
+						</p>
+
+						<div class="member_btn">
+							<button type="submit" class="">ログイン</button>
+						</div>
+					</s:form>
+				</div>
+			</div>
 
 
 
-	<div class="nomember">
-	<h2>初めてのお客様</h2>
-	<h5>商品購入の際は会員登録をお願いします。</h5>
-	<div class="nomember_btn"><button type="submit" class="" >新規会員登録</button></div>
+			<div class="nomember">
+				<h3>初めてのお客様</h3>
+				商品購入の際はユーザー登録をお願いします。<br> <br>
+				<div class="nomember_btn">
+					<a href='<s:url action="GoUserRegisterAction"/>'>新規ユーザー登録</a>
+				</div>
+			</div>
+		</div>
+
+
+
 	</div>
-
-
-
- </div>
-
-<%-- footer --%>
+	<!--メインここまで -->
 
 	<div id="footer">
-		<div id="copy">©All Right Reserved.</div>
+		<p>©All Right Reserved.</p>
 	</div>
-
-	<script type="text/javascript" src="script.js"></script>
 </body>
 </html>

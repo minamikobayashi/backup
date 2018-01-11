@@ -13,8 +13,6 @@
 <meta name="keywords" content="" />
 
 <link rel="stylesheet" type="text/css" href="./css/home.css">
-<link rel="stylesheet"
-	href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css">
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -40,44 +38,40 @@ speed: 1000
 </head>
 <body>
 
-	<%-- top --%>
-
-	<div id="top">
-		<img src="./image/img.png"> <a
-			href="https://www.instagram.com/?hl=ja"> <span
-			style="font-size: 220%; opacity: 0.5; color: #e29399;"><i
-				class="fa fa-instagram"></i></span></a> <a href="https://twitter.com/?lang=ja">
-			<span style="font-size: 220%; opacity: 0.5; color: #e29399;"><i
-				class="fa fa-twitter"></i></span>
-		</a> <a href="https://ja-jp.facebook.com"> <span
-			style="font-size: 220%; opacity: 0.5; color: #e29399;"><i
-				class="fa fa-facebook-square"></i></span></a>
-
-	</div>
-
-	<%-- menu --%>
-
-	<div id="header">
-
-		<div id="menu">
+	
+<div id="header">
+		<div class="icon">
+			<img src="./image/img.png">
+		</div>
+		
+		<div class="title">FASSION SHOP</div>
+		
+		<div class="menu">
 			<ul>
-				<li><a href="#">TOP</a></li>
-				<li><a href="#">NEWS</a></li>
-				<li><a href="#">SNAP</a></li>
-				<li><a href="#">STORE</a></li>
-				<li><a href="#">ONLINESHOP</a></li>
+				<li><a href="GoHomeAction">TOP</a></li>
+				<li><a href="GoNewsAction">NEWS</a></li>
+				<s:if test="!#session.loginFlg">
+					<li><a href="GoLoginAction">LOGIN</a></li>
+				</s:if>
+				<s:else>
+					<li><a href="LogoutAction">LOGOUT</a>
+				</s:else>
+
+				<li><a href="GoCartAction">CART</a>
+				<li><a href="ProductInfoAction">STORE</a></li>
+				<s:if test="#session.loginFlg">
+					<li><a href="MyPageAction">MYPAGE</a></li>
+				</s:if>
+				<s:else>
+				</s:else>
+
 			</ul>
 		</div>
-
+		
 	</div>
-
-
-	<%-- main --%>
 
 	<div id="main">
 
-
-    <%-- main - slideshow --%>
 		<div class="slideshow">
 			<ul class="bxslider">
 				<li><img src="./image/img3.png"></li>
@@ -88,10 +82,8 @@ speed: 1000
 
 	</div>
 
-	<%-- footer --%>
-
 	<div id="footer">
-		<div id="copy">©All Right Reserved.</div>
+		<p>©All Right Reserved.</p>
 	</div>
 
 	<script type="text/javascript" src="script.js"></script>
